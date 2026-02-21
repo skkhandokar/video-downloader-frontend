@@ -262,9 +262,8 @@
 
 
 
-
 "use client";
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 
 export default function VideoVault() {
   const [url, setUrl] = useState("");
@@ -272,11 +271,11 @@ export default function VideoVault() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ডাউনলোডের জন্য স্টেট
   const [progress, setProgress] = useState(0);
-  const [status, setStatus] = useState("idle"); // 'idle', 'downloading', 'paused', 'success'
+  const [status, setStatus] = useState("idle"); 
   const [timeLeft, setTimeLeft] = useState(null);
   const [isPaused, setIsPaused] = useState(false);
+  
   const abortControllerRef = useRef(null);
 
   const handleAnalyze = async (e) => {
@@ -311,16 +310,21 @@ export default function VideoVault() {
 
     try {
       const downloadUrl = `http://127.0.0.1:8000/api/download-file/?url=${encodeURIComponent(url)}&format_id=${formatId}`;
-      const response = await fetch(downloadUrl, { signal: abortControllerRef.current.signal });
+      const response = await fetch(downloadUrl, { 
+        signal: abortControllerRef.current.signal 
+      });
+
+      if (!response.body) return;
 
       const reader = response.body.getReader();
-      const contentLength = response.headers.get("Content-Length");
+      const contentLengthHeader = response.headers.get("Content-Length");
+      const contentLength = contentLengthHeader ? parseInt(contentLengthHeader) : 0;
+      
       let receivedLength = 0;
       let chunks = [];
 
       while (true) {
         if (isPaused) {
-          // পজ লজিক: এখানে রিডার ওয়েট করবে (সিমুলেটেড)
           await new Promise(resolve => setTimeout(resolve, 1000));
           continue;
         }
@@ -346,8 +350,10 @@ export default function VideoVault() {
       const fileUrl = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = fileUrl;
-      a.download = `${videoData.title || 'video'}.mp4`;
+      a.download = `${videoData?.title || 'video'}.mp4`;
+      document.body.appendChild(a);
       a.click();
+      a.remove();
       
       setStatus("success");
       setTimeout(() => setStatus("idle"), 3000);
@@ -358,7 +364,6 @@ export default function VideoVault() {
 
   return (
     <div style={styles.wrapper}>
-      {/* ফ্লোটিং প্রজেক্ট কার্ড (মাঝখানে) */}
       {(status === "downloading" || status === "paused" || status === "success") && (
         <div style={styles.floatingBox}>
           <div style={styles.pCard}>
@@ -391,7 +396,6 @@ export default function VideoVault() {
       <div style={styles.container}>
         <header style={{marginBottom:'40px'}}>
           <h1 style={styles.logo}>Video<span style={{ color: "#00d2ff" }}>Vault</span></h1>
-          {/* লোগোর নিচের প্রফেশনাল টেক্সট */}
           <p style={styles.tagline}>The ultimate high-speed video downloader for creators.</p>
           <p style={styles.description}>
             Securely download videos from YouTube, Instagram, Facebook, and TikTok in up to 4K resolution. 
@@ -431,8 +435,7 @@ export default function VideoVault() {
       </div>
 
       <footer style={styles.footer}>
-        <p>© 2026 VideoVault - Professional Media Suite</p>
-        <p>Powered by <a href="https://shortfy.xyz" target="_blank" style={styles.link}>Shortfy.xyz</a></p>
+        <p>© 2026 VideoVault - Powered by <a href="https://shortfy.xyz" target="_blank" style={styles.link}>Shortfy.xyz</a></p>
       </footer>
     </div>
   );
@@ -446,17 +449,13 @@ const styles = {
   description: { color: "#94a3b8", fontSize: "0.95rem", maxWidth: "600px", margin: "0 auto", lineHeight: "1.6" },
   searchBox: { display: "flex", background: "rgba(30, 41, 59, 0.7)", padding: "8px", borderRadius: "18px", border: "1px solid #334155", backdropFilter: 'blur(10px)', marginTop:'30px' },
   input: { flex: 1, background: "transparent", border: "none", padding: "15px", color: "#fff", outline: "none", fontSize:'1rem' },
-  btnAnalyze: { background: "#00d2ff", color: "#050a18", border: "none", padding: "0 30px", borderRadius: "12px", fontWeight: "bold", cursor: "pointer", transition:'0.3s' },
-  
-  // রেজাল্ট কার্ড
+  btnAnalyze: { background: "#00d2ff", color: "#050a18", border: "none", padding: "0 30px", borderRadius: "12px", fontWeight: "bold", cursor: "pointer" },
   resultCard: { marginTop: "40px", background: "rgba(255, 255, 255, 0.02)", padding: "25px", borderRadius: "24px", border: "1px solid rgba(255,255,255,0.05)", textAlign:'left' },
   videoInfo: { display: 'flex', gap: '25px', flexWrap: 'wrap' },
   thumb: { width: '220px', borderRadius: '15px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' },
   vTitle: { fontSize: '1.2rem', marginBottom: '20px', fontWeight:'600' },
   grid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" },
-  qBtn: { padding: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '10px', cursor: 'pointer', fontWeight: '500', transition:'0.2s' },
-  
-  // ফ্লোটিং প্রগ্রেস কার্ড (মাঝখানে)
+  qBtn: { padding: '12px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '10px', cursor: 'pointer', fontWeight: '500' },
   floatingBox: { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 1000, width: '90%', maxWidth: '420px' },
   pCard: { background: '#0f172a', padding: '30px', borderRadius: '24px', boxShadow: '0 25px 50px rgba(0,0,0,0.8)', border: '1px solid #1e293b' },
   pHeader: { display: 'flex', justifyContent: 'space-between', marginBottom: '15px', fontSize:'15px' },
@@ -465,7 +464,6 @@ const styles = {
   pFooter: { display: 'flex', justifyContent: 'space-between', marginTop: '20px', fontSize: '13px', color: '#94a3b8', alignItems: 'center' },
   pauseBtn: { background: 'rgba(255,255,255,0.05)', border: '1px solid #334155', color: '#fff', padding: '6px 15px', borderRadius: '8px', cursor: 'pointer' },
   cancelBtn: { background: 'rgba(239, 68, 68, 0.1)', border: '1px solid #ef4444', color: '#ef4444', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer' },
-
   footer: { marginTop: "60px", fontSize: "13px", color: "#475569", textAlign:'center' },
   link: { color: "#00d2ff", textDecoration: "none", fontWeight: "600" }
 };
