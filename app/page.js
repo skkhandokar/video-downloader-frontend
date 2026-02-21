@@ -264,7 +264,7 @@
 
 "use client";
 import React, { useState, useRef } from "react";
-
+import BASE_URL from "./config/api";
 export default function VideoVault() {
   const [url, setUrl] = useState("");
   const [videoData, setVideoData] = useState(null);
@@ -285,7 +285,7 @@ export default function VideoVault() {
     setError("");
     setVideoData(null);
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/video-info/", {
+      const response = await fetch(`${BASE_URL}/api/video-info/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
@@ -309,7 +309,7 @@ export default function VideoVault() {
     const startTime = Date.now();
 
     try {
-      const downloadUrl = `http://127.0.0.1:8000/api/download-file/?url=${encodeURIComponent(url)}&format_id=${formatId}`;
+      const downloadUrl = `${BASE_URL}/api/download-file/?url=${encodeURIComponent(url)}&format_id=${formatId}`;
       const response = await fetch(downloadUrl, { 
         signal: abortControllerRef.current.signal 
       });
