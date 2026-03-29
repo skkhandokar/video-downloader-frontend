@@ -167,7 +167,7 @@ export default function VideoVault() {
 
       <div style={styles.container}>
         <header style={{marginBottom:'40px'}}>
-          <h1 style={styles.logo}>Video<span style={{ color: "#00d2ff" }}>Vault</span></h1>
+          <h1 style={styles.logo}>Video<span style={{ color: "#00d2ff" }}>Voult</span></h1>
           <p style={styles.tagline}>The ultimate high-speed video downloader for creators.</p>
           <p style={styles.description}>
             Securely download videos from YouTube in high resolution. 
