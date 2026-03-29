@@ -169,7 +169,7 @@ export default function VideoVault() {
           <p style={styles.tagline}>The ultimate high-speed video downloader for creators.</p>
           <p style={styles.description}>
             Securely download videos from YouTube in high resolution. 
-            Powered by Django & Shortfy.xyz technology.
+            Powered by Shortfy.xyz technology.
           </p>
         </header>
 
