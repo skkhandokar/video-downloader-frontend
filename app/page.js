@@ -1,8 +1,10 @@
 "use client";
 import React, { useState, useRef } from "react";
-import BASE_URL from "./config/api"; 
 
+const BASE_URL = "https://skkhandokar21.pythonanywhere.com";
 export default function VideoVault() {
+
+  
   const [url, setUrl] = useState("");
   const [videoData, setVideoData] = useState(null);
   const [loading, setLoading] = useState(false);
