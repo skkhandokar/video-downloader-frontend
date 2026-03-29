@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useRef } from "react";
 
-const BASE_URL = "https://video-downloader-backend-5.onrender.com";
+const BASE_URL = "https://video-downloader-backend-6.onrender.com";
 export default function VideoVault() {
 
   
@@ -209,7 +209,7 @@ export default function VideoVault() {
       </div>
 
       <footer style={styles.footer}>
-        <p>© 2026 VideoVault - Powered by <a href="https://shortfy.xyz" target="_blank" style={styles.link}>Shortfy.xyz</a></p>
+        <p>© 2026 VideoVoult - Powered by <a href="https://shortfy.xyz" target="_blank" style={styles.link}>Shortfy.xyz</a></p>
       </footer>
     </div>
   );
